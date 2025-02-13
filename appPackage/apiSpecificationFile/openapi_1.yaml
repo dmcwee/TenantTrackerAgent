@@ -1,0 +1,97 @@
+openapi: 3.0.2
+info:
+  title: Tenant Configuration Api
+  version: '0.1'
+servers:
+  - url: https://login.microsoftonline.com
+paths:
+  /{tenant-id}/.well-known/openid-configuration:
+    get:
+      description: Get OpenID Configuration
+      operationId: GetOpenIdConfiguration
+      parameters:
+        - $ref: '#/components/parameters/tenant-id'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/openId'
+components:
+  parameters:
+    tenant-id:
+      name: tenant-id
+      in: path
+      required: true
+      schema:
+        type: string
+      description: The tenant ID or Domain
+  schemas:
+    openId:
+      type: object
+      properties:
+        token_endpoint:
+          type: string
+        token_endpoint_auth_methods_supported:
+          type: array
+          items:
+            type: string
+        jwks_uri:
+          type: string
+        response_modes_supported:
+          type: array
+          items:
+            type: string
+        subject_types_supported:
+          type: array
+          items:
+            type: string
+        id_token_signing_alg_values_supported:
+          type: array
+          items:
+            type: string
+        response_types_supported:
+          type: array
+          items:
+            type: string
+        scopes_supported:
+          type: array
+          items:
+            type: string
+        issuer:
+          type: string
+        microsoft_multi_refresh_token:
+          type: boolean
+        authorization_endpoint:
+          type: string
+        device_authorization_endpoint:
+          type: string
+        http_logout_supported:
+          type: boolean
+        frontchannel_logout_supported:
+          type: boolean
+        end_session_endpoint:
+          type: string
+        claims_supported:
+          type: array
+          items:
+            type: string
+        check_session_iframe:
+          type: string
+        userinfo_endpoint:
+          type: string
+        kerberos_endpoint:
+          type: string
+        tenant_region_scope:
+          type: string
+        tenant_region_sub_scope:
+          type: string
+        cloud_instance_name:
+          type: string
+        cloud_graph_host_name:
+          type: string
+        msgraph_host:
+          type: string
+        rbac_url:
+          type: string

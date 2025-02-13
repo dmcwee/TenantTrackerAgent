@@ -1,0 +1,70 @@
+{
+    "$schema": "https://developer.microsoft.com/json-schemas/copilot/plugin/v2.2/schema.json",
+    "schema_version": "v2.2",
+    "name_for_human": "Tenant Tracker Agent",
+    "description_for_human": "OpenId Tenant Configuration Agent",
+    "namespace": "myagent",
+    "functions": [
+        {
+            "name": "GetOpenIdConfiguration",
+            "description": "Get Tenant Details",
+            "capabilities": {
+                "response_semantics": {
+                    "data_path": "$",
+                    "properties": {
+                        "title": "$.token_endpoint",
+                        "subtitle": "$.jwks_uri"
+                    },
+                    "static_template": {
+                        "type": "AdaptiveCard",
+                        "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+                        "version": "1.5",
+                        "body": [
+                            {
+                                "type": "TextBlock",
+                                "text": "**Tenant ID:** ${replace(replace(replace(token_endpoint,'https://login.microsoftonline.com/', ''), '/oauth2/token', ''), 'https://login.microsoftonline.us/', '')}"
+                            },
+                            {
+                                "type": "TextBlock",
+                                "text": "**Tenant Location:** ${if(tenant_region_scope == 'USG', 'Fairfax', if(tenant_region_scope == 'USGov', 'Arlington', 'Commercial - ' + tenant_region_scope))}"
+                            },
+                            {
+                                "type": "TextBlock",
+                                "text": "**B2B Available:** ${if(tenant_region_scope == 'USG', 'No', 'Yes')}"
+                            },                            
+                            {
+                                "type": "TextBlock",
+                                "text": "**Tenant Region:** ${if(tenant_region_sub_scope == 'DODCON', 'GCCH (IL4)', if(tenant_region_sub_scope == 'DOD', 'DOD (IL5)', if(tenant_region_sub_scope == 'GCC', 'GCC (IL2)', if(tenant_region_scope == 'USG' || tenant_region_scope == 'USGov', 'Azure Gov Only', tenant_region_scope))))}"
+                            },
+                            {
+                                "type": "TextBlock",
+                                "text": "**Tenant Whitelisted:** ${if(tenant_region_scope == 'USG' && cloud_instance_name == 'microsoftonline.com', 'No', if(tenant_region_scope == 'USGov' && cloud_instance_name == 'microsoftonline.com', 'No - Unexpected', 'Yes'))}"
+                            }
+                        ]
+                    }
+                }
+            }
+        }
+    ],
+    "runtimes": [
+        {
+            "type": "OpenApi",
+            "auth": {
+                "type": "None"
+            },
+            "spec": {
+                "url": "apiSpecificationFile/openapi_1.yaml"
+            },
+            "run_for_functions": [
+                "GetOpenIdConfiguration"
+            ]
+        }
+    ],
+    "capabilities": {
+        "conversation_starters": [
+            {
+                "text": "Get OpenID Configuration"
+            }
+        ]
+    }
+}

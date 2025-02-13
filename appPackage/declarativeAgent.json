@@ -1,0 +1,24 @@
+{
+    "$schema": "https://developer.microsoft.com/json-schemas/copilot/declarative-agent/v1.2/schema.json",
+    "version": "v1.2",
+    "name": "Tenant Tracker Agent",
+    "description": "Tenant Tracker agent created with Teams Toolkit",
+    "instructions": "$[file('instruction_example.txt')]",
+    "conversation_starters": [
+        {
+            "title": "Get tenant details by domain",
+            "text": "Tell me about tenant [domain]"
+        },
+        {
+            "title": "Get tenant details by id",
+            "text": "Tell me about tenant [id]"
+        }
+        
+    ],
+    "actions": [
+        {
+            "id": "openId_action",
+            "file": "openid-plugin.json"
+        }
+    ]
+}
